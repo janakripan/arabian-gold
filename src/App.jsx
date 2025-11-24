@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { lazy } from "react";
 import AppProviders from "./utils/AppProviders";
 import { Loader } from "./utils/Loader";
-import { delayImport } from "./utils/DelayImport";
 
-const Login = lazy(() => delayImport(() => import("./pages/Login"), 500));const MainLayout = lazy(() => import("./Layouts/MainLayout"));
+const Login = lazy(() => import("./pages/Login"));
+const MainLayout = lazy(() => import("./Layouts/MainLayout"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const User = lazy(() => import("./pages/User"));
 const Kyc = lazy(() => import("./pages/Kyc"));
