@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useMemo } from "react";
 import SearchBar from "../shared/SearchBar";
 import Select from "react-select";
-import { useSearch } from "../../Contexts/SearchContext";
+import { useSearch } from "../../contexts/SearchContext";
 import { useUsers } from "../../contexts/UserContext";
 
 const statusOptions = [

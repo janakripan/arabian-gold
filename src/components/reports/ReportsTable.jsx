@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import Select from "react-select";
-import { useSearch } from "../../Contexts/SearchContext";
+import { useSearch } from "../../contexts/SearchContext";
 import { reportLogs } from "../../constants";
 import SearchBar from "../shared/SearchBar";
 import { FiPlus } from "react-icons/fi";

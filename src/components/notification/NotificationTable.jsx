@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useSearch } from "../../Contexts/SearchContext";
+import { useSearch } from "../../contexts/SearchContext";
 import { notifications } from "../../constants";
 import { FiPlus } from "react-icons/fi";
 import SearchBar from "../shared/SearchBar";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CiSearch } from "react-icons/ci";
-import { useSearch } from "../../Contexts/SearchContext";
+import { useSearch } from "../../contexts/SearchContext";
 
 const SearchBar = () => {
   const { setSearchQuery } = useSearch();
