@@ -1,8 +1,8 @@
 import React from "react";
 import { SchemeProvider } from "../contexts/SchemeContext";
-import { SearchProvider } from "../Contexts/SearchContext";
 import CombinedRefetchWrapper from "./CombinedRefetchWrapper";
 import { UserProvider } from "../contexts/UserContext";
+import { SearchProvider } from "../Contexts/SearchContext";
 
 export default function AppProviders({ children }) {
   return (
