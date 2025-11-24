@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useSearch } from "../../Contexts/SearchContext";
+import { useSearch } from "../../contexts/SearchContext";
 import { kycData } from "../../constants";
 import SearchBar from "../shared/SearchBar";
 import Select from "react-select";
