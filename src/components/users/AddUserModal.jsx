@@ -3,7 +3,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import Select from "react-select";
-import ToggleSwitch from "../Shared/ToggleSwitch";
+import ToggleSwitch from "../shared/ToggleSwitch";
 import { FiPlus } from "react-icons/fi";
 
 const kycOptions = [

@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { FiFileText, FiPlus } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import UserStatCard from "../components/users/UserStatCard";
 import UserTable from '../components/users/UserTable';
-import AddUserModal from '../components/users/AddUserModal';
 import { useUsers } from '../contexts/UserContext';
 import { RiUserLine, RiUserStarLine, RiVerifiedBadgeLine } from 'react-icons/ri';
 import { Loader } from '../utils/Loader';
@@ -64,14 +63,7 @@ if(isPending|| isLoading)
           </p>
         </div>
 
-        {/* Add User Button */}
-        {/* <button
-          className="flex gap-1.75 items-center justify-center text-white bg-golden rounded-lg px-5.5 py-2.75 capitalize md:text-sm text-xl relative group hover:scale-103 transition-all duration-300 overflow-hidden active:scale-95"
-          onClick={handleAddClick}
-        >
-          <div className="h-[80px] w-1/4 absolute rotate-45 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-30 group-hover:translate-x-35 transition-all duration-500" />
-          <FiPlus /> <span className="hidden md:block">add new user</span>
-        </button> */}
+    
       </div>
 
       {/* Stat Card Section */}
@@ -86,12 +78,7 @@ if(isPending|| isLoading)
         <UserTable />
       </div>
 
-      {/* Add User Modal */}
-      {/* {addUser && (
-        <div className="fixed inset-0 backdrop-blur-3xl z-50 flex items-center justify-center px-4">
-          <AddUserModal setAddUser={setAddUser} />
-        </div>
-      )} */}
+    
     </div>
   );
 };
