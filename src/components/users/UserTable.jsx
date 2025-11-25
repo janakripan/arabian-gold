@@ -28,7 +28,7 @@ const UserTable = () => {
     });
   }, [searchQuery, users]);
 
-  const totalPages = pagination.totalItems / pageSize;
+  const totalPages = Math.ceil(pagination.totalItems / pageSize);
   // const lastIndex = pageNo * pageSize;
   // const firstIndex = lastIndex - pageSize;
   const currentData = filteredData;
@@ -289,7 +289,7 @@ const UserTable = () => {
               onClick={() =>
                 setPageNo((prev) => Math.min(prev + 1, totalPages))
               }
-              disabled={pageNo === totalPages}
+             disabled={currentData.length < pageSize || pageNo === totalPages}
               className="px-3 py-1 border border-[#E5E7EB] rounded-lg text-subText text-xs disabled:opacity-50"
             >
               Next
