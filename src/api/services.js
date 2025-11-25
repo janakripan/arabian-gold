@@ -46,12 +46,35 @@ export const editScheme = (data) =>
 
 // GER USER DETAILS 
 
-export const getUsers =async ({pageNo, pageSize}) =>{
-  const res = await api.get(GET_USERS,{
-    params:{
+export const getUsers = async ({ pageNo, pageSize, filters }) => {
+  // ❗ Remove empty/unselected filters
+  const cleanedFilters = {};
+
+  if (filters.IsActive !== null  )
+    cleanedFilters.IsActive = filters.IsActive;
+
+  if (filters.KYCStatus) cleanedFilters.KYCStatus = filters.KYCStatus;
+
+  if (filters.UserName) cleanedFilters.UserName = filters.UserName;
+
+  if (filters.MobileNo) cleanedFilters.MobileNo = filters.MobileNo;
+
+  if (filters.JoinedFrom) cleanedFilters.JoinedFrom = filters.JoinedFrom;
+
+  if (filters.JoinedTo) cleanedFilters.JoinedTo = filters.JoinedTo;
+
+  // ⬅️ Now cleanedFilters contains ONLY selected ones
+console.log(JSON.stringify(cleanedFilters));
+
+  const res = await api.get(GET_USERS, {
+    params: {
       pageNo,
       pageSize,
-    }
+      ...(Object.keys(cleanedFilters).length > 0 && {
+        filtersJson: JSON.stringify(cleanedFilters),
+      }),
+    },
   });
+
   return res.data;
-}
+};

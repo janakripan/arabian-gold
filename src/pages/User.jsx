@@ -41,14 +41,8 @@ const Users = () => {
     color:"#10B981",
   },
 ]
-if(isPending|| isLoading)
-  return(
-<div className='w-full h-full flex items-center justify-center'>
 
-   <Loader/>
 
-</div>
-)
   return (
     <div className="w-full h-full flex flex-col gap-y-5">
       {/* Heading and Add User Button */}

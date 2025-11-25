@@ -42,10 +42,10 @@ export const usePostScheme = () =>
 
 
 ///get users hook ///
-export const useGetUsers = ({pageNo, pageSize,token}) =>
+export const useGetUsers = ({pageNo, pageSize,token,filters }) =>
   useQuery({
-    queryKey: ["getUsers",pageNo, pageSize],
-    queryFn:()=> getUsers({pageNo, pageSize}),
+    queryKey: ["getUsers",pageNo, pageSize, JSON.stringify(filters) ],
+    queryFn:()=> getUsers({pageNo, pageSize,filters }),
     enabled: !!token,
-    keepPreviousData: true,
+    keepPreviousData: false,
   });

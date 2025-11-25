@@ -1,121 +1,15 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import SearchBar from "../shared/SearchBar";
-import Select from "react-select";
 import { useSearch } from "../../contexts/SearchContext";
 import { useUsers } from "../../contexts/UserContext";
-
-const statusOptions = [
-  { value: "all", label: "All Status" },
-  { value: "active", label: "Active" },
-  { value: "inactive", label: "Inactive" },
-];
-
-const kycOptions = [
-  { value: "all", label: "All KYC" },
-  { value: "pending", label: "Pending" },
-  { value: "rejected", label: "Rejected" },
-  { value: "verified", label: "Verified" },
-];
-
-const TableFilters = ({
-  statusFilter,
-  setStatusFilter,
-  kycFilter,
-  setKycFilter,
-}) => {
-  return (
-    <div className="w-fit h-full flex gap-3">
-      <Select
-        value={statusOptions.find((o) => o.value === statusFilter)}
-        onChange={(option) => setStatusFilter(option?.value ?? "all")}
-        options={statusOptions}
-        isSearchable={false}
-        styles={{
-          control: (provided) => ({
-            ...provided,
-            display: "inline-flex",
-            width: "auto",
-            minWidth: "120px",
-            borderRadius: "8px",
-            borderColor: "#E5E7EB",
-            paddingLeft: "17px",
-            paddingRight: "17px",
-            fontSize: "14px",
-            paddingTop: "9px",
-            paddingBottom: "9px",
-          }),
-          valueContainer: (provided) => ({
-            ...provided,
-            padding: 0,
-            paddingRight: "5px",
-            rounded: "8px",
-          }),
-          singleValue: (provided) => ({
-            ...provided,
-            whiteSpace: "nowrap",
-            overflow: "visible",
-          }),
-          dropdownIndicator: (provided) => ({
-            ...provided,
-            padding: "0 0",
-            color: "#9CA3AF",
-            width: "16px",
-          }),
-          indicatorSeparator: (provided) => ({ ...provided, display: "none" }),
-          menu: (provided) => ({ ...provided, fontSize: "14px" }),
-        }}
-      />
-      <Select
-        value={kycOptions.find((o) => o.value === kycFilter)}
-        onChange={(option) => setKycFilter(option?.value ?? "all")}
-        options={kycOptions}
-        isSearchable={false}
-        styles={{
-          control: (provided) => ({
-            ...provided,
-            display: "inline-flex",
-            width: "auto",
-            minWidth: "120px",
-            borderRadius: "8px",
-            borderColor: "#E5E7EB",
-            paddingLeft: "17px",
-            paddingRight: "17px",
-            fontSize: "14px",
-            paddingTop: "9px",
-            paddingBottom: "9px",
-          }),
-          valueContainer: (provided) => ({
-            ...provided,
-            padding: 0,
-            paddingRight: "5px",
-            rounded: "8px",
-          }),
-          singleValue: (provided) => ({
-            ...provided,
-            whiteSpace: "nowrap",
-            overflow: "visible",
-          }),
-          dropdownIndicator: (provided) => ({
-            ...provided,
-            padding: "0 0",
-            color: "#9CA3AF",
-            width: "16px",
-          }),
-          indicatorSeparator: (provided) => ({ ...provided, display: "none" }),
-          menu: (provided) => ({ ...provided, fontSize: "14px" }),
-        }}
-      />
-    </div>
-  );
-};
+import UserFilters from "./UserFilters";
+import { Loader } from "../../utils/Loader";
 
 const UserTable = () => {
+  const { users, isLoading, pageNo, setPageNo, pagination, pageSize, filters } =
+    useUsers();
 
-  const { users, isLoading, pageNo, setPageNo, pagination,pageSize } = useUsers();
-
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [kycFilter, setKycFilter] = useState("all");
   const { searchQuery } = useSearch();
 
   const filteredData = useMemo(() => {
@@ -130,18 +24,11 @@ const UserTable = () => {
         user.kycStatus.toLowerCase().includes(q) ||
         user.investment.toString().includes(q);
 
-      const statusMatch =
-        statusFilter === "all" ||
-        (statusFilter === "active" && user.isActive) ||
-        (statusFilter === "inactive" && !user.isActive);
-
-      const kycMatch = kycFilter === "all" || user.kycStatus === kycFilter;
-
-      return searchMatch && statusMatch && kycMatch;
+      return searchMatch;
     });
-  }, [searchQuery, statusFilter, kycFilter,users]);
+  }, [searchQuery, users]);
 
-  const totalPages = pagination.totalItems/pageSize;
+  const totalPages = pagination.totalItems / pageSize;
   // const lastIndex = pageNo * pageSize;
   // const firstIndex = lastIndex - pageSize;
   const currentData = filteredData;
@@ -171,16 +58,69 @@ const UserTable = () => {
   return (
     <div className="w-full h-fit flex flex-col rounded-lg border border-[#F3F4F6] bg-white shadow shadow-[#0000000D] mt-4">
       {/* Searchbar and filters */}
-      <div className="w-full flex flex-col md:flex-row gap-4 items-center p-5.5">
-        <div className="w-full">
-          <SearchBar />
+      <div className="w-full h-fit flex flex-col ">
+        <div className="w-full flex flex-col md:flex-row gap-4 items-center p-5.5">
+          <div className="w-full">
+            <SearchBar />
+          </div>
+          <UserFilters />
         </div>
-        <TableFilters
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          kycFilter={kycFilter}
-          setKycFilter={setKycFilter}
-        />
+
+        {filters && (
+          <div className="w-full flex flex-wrap gap-2 px-5.5 pb-4">
+            {/* Active Status */}
+            {filters.IsActive !== null && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                Status: {filters.IsActive === 1 ? "Active" : "Inactive"}
+              </span>
+            )}
+
+            {/* KYC Status */}
+            {filters.KYCStatus && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full capitalize">
+                KYC: {filters.KYCStatus}
+              </span>
+            )}
+
+            {/* Username */}
+            {filters.UserName && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                Username: {filters.UserName}
+              </span>
+            )}
+
+            {/* Phone */}
+            {filters.MobileNo && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                Phone: {filters.MobileNo}
+              </span>
+            )}
+
+            {/* Joined From */}
+            {filters.JoinedFrom && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                From:{" "}
+                {new Date(filters.JoinedFrom).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            )}
+
+            {/* Joined To */}
+            {filters.JoinedTo && (
+              <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                To:{" "}
+                {new Date(filters.JoinedTo).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Table */}
@@ -208,7 +148,15 @@ const UserTable = () => {
           </thead>
 
           <tbody>
-            {currentData?.length > 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={7} className="py-16">
+                  <div className="w-full flex justify-center items-center">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : currentData?.length > 0 ? (
               currentData?.map((user, idx) => (
                 <tr
                   key={idx}
@@ -234,7 +182,7 @@ const UserTable = () => {
                     <div className="flex flex-col">
                       <span className="text-xs text-subText">{user.email}</span>
                       <span className="text-xs text-subText/70">
-                        {user.phoneNo}
+                        {user.mobileNo}
                       </span>
                     </div>
                   </td>
@@ -317,7 +265,7 @@ const UserTable = () => {
           <div className="flex justify-end gap-2 mt-2">
             <button
               onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
-               disabled={pageNo === 1}
+              disabled={pageNo === 1}
               className="px-3 py-1 border border-[#E5E7EB] rounded-lg text-subText text-xs disabled:opacity-50"
             >
               Previous
@@ -341,7 +289,7 @@ const UserTable = () => {
               onClick={() =>
                 setPageNo((prev) => Math.min(prev + 1, totalPages))
               }
-               disabled={pageNo === totalPages}
+              disabled={pageNo === totalPages}
               className="px-3 py-1 border border-[#E5E7EB] rounded-lg text-subText text-xs disabled:opacity-50"
             >
               Next

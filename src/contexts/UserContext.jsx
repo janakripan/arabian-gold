@@ -10,6 +10,16 @@ export const UserProvider = ({ children }) => {
   const [pageNo, setPageNo] = useState(1);
   const pageSize = 6;
 
+  const [filters, setFilters] = useState({
+    IsActive:null,
+    KYCStatus: "",
+    UserName: "",
+    MobileNo: "",
+    JoinedFrom: "",
+    JoinedTo: "",
+  });
+
+
   // Call API using React Query hook
   const {
     data,
@@ -17,7 +27,8 @@ export const UserProvider = ({ children }) => {
     isError,
     isPending,
     refetch: refetchUsers,
-  } = useGetUsers({ pageNo, pageSize, token });
+    
+  } = useGetUsers({ pageNo, pageSize, token,filters });
 
   const [users, setUsers] = useState([]);
   const [statData, setStatData] = useState();
@@ -34,8 +45,11 @@ export const UserProvider = ({ children }) => {
         totalPages: data.data.totalPages,
         totalItems: data.data.totalItems,
       });
+      console.log(data)
+      console.log(filters);
+      
     }
-  }, [data]);
+  }, [data,filters]);
 
   return (
     <UserContext.Provider
@@ -50,6 +64,8 @@ export const UserProvider = ({ children }) => {
         pageSize,
         pagination,
         statData,
+        setFilters,
+        filters
       }}
     >
       {children}
