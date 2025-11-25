@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { lazy } from "react";
 import AppProviders from "./utils/AppProviders";
 import { Loader } from "./utils/Loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = lazy(() => import("./pages/Login"));
 const MainLayout = lazy(() => import("./Layouts/MainLayout"));
@@ -20,6 +22,14 @@ function App() {
     <>
       <BrowserRouter>
         <AppProviders>
+           <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            newestOnTop={false}
+            closeOnClick
+            pauseOnHover
+            theme="light"
+          />
           <Suspense
             fallback={
               <div className="text-center w-full h-screen bg-Bgprimary flex items-center justify-center ">

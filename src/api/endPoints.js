@@ -23,3 +23,5 @@ export const EDIT_SCHEME = "/api/Scheme/getschema"
 //////USER MANAGEMANT END POINTS //////
 
 export const GET_USERS = "/api/User/get-user-management"
+
+export const SET_ACTIVE = "/api/User/set-active"

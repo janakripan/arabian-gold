@@ -3,6 +3,7 @@ import {
   getScheme,
   getUsers,
   postScheme,
+  setActiveStatus,
   userLogin,
   userLogout,
 } from "./services";
@@ -40,12 +41,19 @@ export const usePostScheme = () =>
 
 /////// user mamagement hooks ////////
 
-
 ///get users hook ///
-export const useGetUsers = ({pageNo, pageSize,token,filters }) =>
+export const useGetUsers = ({ pageNo, pageSize, token, filters }) =>
   useQuery({
-    queryKey: ["getUsers",pageNo, pageSize, JSON.stringify(filters) ],
-    queryFn:()=> getUsers({pageNo, pageSize,filters }),
+    queryKey: ["getUsers", pageNo, pageSize, JSON.stringify(filters)],
+    queryFn: () => getUsers({ pageNo, pageSize, filters }),
     enabled: !!token,
-    keepPreviousData: false,
+    keepPreviousData: true,
+  });
+
+///set user status hook ///
+
+export const useSetActiveStatus = () =>
+  useMutation({
+    mutationFn: setActiveStatus,
+    mutationKey: ["setActiveStatus"],
   });

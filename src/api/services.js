@@ -3,6 +3,7 @@ import {
   GET_SCHEME,
   GET_USERS,
   POST_SCHEME,
+  SET_ACTIVE,
   USER_LOGIN,
   USER_LOGOUT,
 } from "./endPoints";
@@ -44,10 +45,10 @@ export const editScheme = (data) =>
 
 ///////// USER SERVICES /////////////
 
-// GER USER DETAILS 
+// get user details
 
 export const getUsers = async ({ pageNo, pageSize, filters }) => {
-  // ❗ Remove empty/unselected filters
+  
   const cleanedFilters = {};
 
   if (filters.IsActive !== null  )
@@ -78,3 +79,10 @@ console.log(JSON.stringify(cleanedFilters));
 
   return res.data;
 };
+
+/// set user status
+
+
+
+export const setActiveStatus = (data) =>
+  api.post(SET_ACTIVE,data).then((res) => res.data);

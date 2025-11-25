@@ -5,10 +5,42 @@ import { useSearch } from "../../contexts/SearchContext";
 import { useUsers } from "../../contexts/UserContext";
 import UserFilters from "./UserFilters";
 import { Loader } from "../../utils/Loader";
+import { IoEyeOutline } from "react-icons/io5";
+import { RiUserForbidLine } from "react-icons/ri";
+import { AiOutlineEdit } from "react-icons/ai";
+import { useSetActiveStatus } from "../../api/hooks";
+import { toast } from "react-toastify";
 
 const UserTable = () => {
-  const { users, isLoading, pageNo, setPageNo, pagination, pageSize, filters } =
-    useUsers();
+  const {
+    users,
+    isLoading,
+    pageNo,
+    setPageNo,
+    pagination,
+    pageSize,
+    filters,
+    refetchUsers,
+  } = useUsers();
+
+  const setStatusMutation = useSetActiveStatus();
+
+  const handleToggle = (userId, currentStatus) => {
+    const newStatus = !currentStatus; // flip active/inactive
+
+    setStatusMutation.mutate(
+      { userId, isActive: newStatus },
+      {
+        onSuccess: () => {
+          toast.success("User status updated successfully");
+          refetchUsers();
+        },
+        onError: () => {
+          toast.error("Failed to update status");
+        },
+      }
+    );
+  };
 
   const { searchQuery } = useSearch();
 
@@ -67,7 +99,7 @@ const UserTable = () => {
         </div>
 
         {filters && (
-          <div className="w-full flex flex-wrap gap-2 px-5.5 pb-4">
+          <div className="w-full flex flex-wrap gap-2 px-5.5 pb-2">
             {/* Active Status */}
             {filters.IsActive !== null && (
               <span className="px-3 py-1 text-xs bg-primary/10 text-primary rounded-full">
@@ -136,6 +168,7 @@ const UserTable = () => {
                 "KYC status",
                 "investment",
                 "actions",
+                "Active Status",
               ].map((header) => (
                 <th
                   key={header}
@@ -229,14 +262,54 @@ const UserTable = () => {
                     </div>
                   </td>
 
+                  {/* actions  */}
+
                   <td className="p-2.75 px-5.5 border-b border-[#E5E7EB] text-xs text-primary">
-                    <div className="w-fit flex flex-col">
-                      <span>AED {user.investment}</span>
-                      <span className="text-subText/70 text-[10px]">
-                        {user.schemes?.length} schemes
-                      </span>
+                    <div className="w-fit grid grid-cols-3 gap-2">
+                      <button className="hover:bg-[#ECECEC] transition-all duration-300 rounded-lg p-2 hover:shadow hover:scale-103 active:scale-95 text-sm text-primary ">
+                        <IoEyeOutline />
+                      </button>
+
+                      <button
+                        className={`hover:bg-[#ECECEC] transition-all duration-300 rounded-lg p-2 hover:shadow hover:scale-103 active:scale-95 text-sm  text-golden`}
+                      >
+                        <AiOutlineEdit />
+                      </button>
+
+                      <button
+                        className={`hover:bg-[#ECECEC] transition-all duration-300 rounded-lg p-2 hover:shadow hover:scale-103 active:scale-95 text-sm text-[#DC2626]  `}
+                      >
+                        <RiUserForbidLine />
+                      </button>
                     </div>
                   </td>
+
+                  {/* set active toggle */}
+
+                  <td className="p-2.75 px-5.5 border-b border-[#E5E7EB]">
+  <label className="relative inline-block w-11 h-6 cursor-pointer">
+    
+    {/* Hidden checkbox */}
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={user.isActive}
+      onChange={() => handleToggle(user.userID, user.isActive)}
+      disabled={setStatusMutation.isPending}
+    />
+
+    {/* Track */}
+    <div className="w-full h-full bg-gray-300 rounded-full transition-colors peer-checked:bg-green-400"></div>
+
+    {/* Knob */}
+    <div className="
+      absolute top-[2px] left-[2px]
+      w-5 h-5 bg-white rounded-full shadow-md
+      transition-transform duration-300
+      peer-checked:translate-x-[19px]
+    "></div>
+  </label>
+</td>
                 </tr>
               ))
             ) : (
@@ -289,7 +362,7 @@ const UserTable = () => {
               onClick={() =>
                 setPageNo((prev) => Math.min(prev + 1, totalPages))
               }
-             disabled={currentData.length < pageSize || pageNo === totalPages}
+              disabled={currentData.length < pageSize || pageNo === totalPages}
               className="px-3 py-1 border border-[#E5E7EB] rounded-lg text-subText text-xs disabled:opacity-50"
             >
               Next
